@@ -361,7 +361,7 @@ h1, h2, h3, h4 {
 /* Responsive constraints */
 @media (max-width: 768px) {
     .nav-links { display: none; }
-    .hero h1 { font-size: 3.5rem; }
+    .hero h1 { font-size: 2.5rem; letter-spacing: -1px; }
     .hero-ctas { flex-direction: column; width: 100%; }
     .hero-ctas .btn { width: 100%; }
 }
@@ -505,8 +505,13 @@ h1, h2, h3, h4 {
 }
 
 @media (max-width: 768px) {
-    .section-title { font-size: 2.5rem; }
+    .section { padding: 60px 0; }
+    .section-title { font-size: 2.2rem; }
     .services-grid { grid-template-columns: 1fr; }
+    .testimonial-grid { grid-template-columns: 1fr; }
+    .service-card { padding: 24px; }
+    .testimonial-card { padding: 24px; }
+    .quote-icon { font-size: 4rem; top: 10px; left: 24px; }
 }
 
 /* =========================================
