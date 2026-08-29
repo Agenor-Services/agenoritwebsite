@@ -7,25 +7,42 @@ export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMessage("");
 
     const formData = new FormData(e.currentTarget);
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const company = formData.get("company") as string;
-    const service = formData.get("service") as string;
-    const message = formData.get("message") as string;
+    const payload = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      company: formData.get("company") as string,
+      service: formData.get("service") as string,
+      message: formData.get("message") as string,
+    };
 
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Failed to submit consultation request.');
+      }
+
       setIsSuccess(true);
-
-      const subject = encodeURIComponent(`New Consultation Request from ${name} (${company})`);
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nCompany: ${company}\nService of Interest: ${service}\n\nPrimary Business Goal:\n${message}`);
-      window.location.href = `mailto:info@agenorit.com.au?subject=${subject}&body=${body}`;
-    }, 1000);
+    } catch (err: any) {
+      console.error('Submission error:', err);
+      setErrorMessage(err.message || 'Something went wrong. Please try again or email us directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSuccess) {
@@ -34,17 +51,27 @@ export default function ContactForm() {
         <div className="w-16 h-16 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle2 size={36} />
         </div>
-        <h3 className="text-2xl font-bold mb-2 text-white">Opening Email Client...</h3>
-        <p className="text-gray-400 max-w-md mx-auto">
-          Your request details have been prepared. If your email client does not open automatically, please send your inquiry directly to{" "}
-          <a href="mailto:info@agenorit.com.au" className="text-blue-400 underline">info@agenorit.com.au</a>.
+        <h3 className="text-2xl font-bold mb-2 text-white">Consultation Request Received</h3>
+        <p className="text-gray-400 max-w-md mx-auto mb-8">
+          Thank you! Our engineering team has received your project details at <strong>info@agenorit.com.au</strong> and will be in touch within 24 hours.
         </p>
+        <button
+          onClick={() => setIsSuccess(false)}
+          className="px-6 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors"
+        >
+          Submit another inquiry
+        </button>
       </div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {errorMessage && (
+        <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+          {errorMessage}
+        </div>
+      )}
       <div>
         <label htmlFor="contact-name" className="block text-sm font-medium text-gray-300 mb-1">
           Full Name

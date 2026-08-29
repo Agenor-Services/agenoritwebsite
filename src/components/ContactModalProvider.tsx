@@ -23,40 +23,55 @@ export function ContactModalProvider({ children }: { children: ReactNode }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const openModal = () => setIsOpen(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const openModal = () => {
+    setErrorMessage("");
+    setIsOpen(true);
+  };
+
   const closeModal = () => {
     setIsOpen(false);
     setTimeout(() => {
       setIsSuccess(false);
+      setErrorMessage("");
     }, 300);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMessage("");
 
     const formData = new FormData(e.currentTarget);
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const company = formData.get("company") as string;
-    const service = formData.get("service") as string;
-    const message = formData.get("message") as string;
+    const payload = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      company: formData.get("company") as string,
+      service: formData.get("service") as string,
+      message: formData.get("message") as string,
+    };
 
-    // Simulate network request processing
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Failed to submit consultation request.');
+      }
+
       setIsSuccess(true);
-      
-      // Trigger mailto client
-      const subject = encodeURIComponent(`New Consultation Request from ${name} (${company})`);
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nCompany: ${company}\nService of Interest: ${service}\n\nPrimary Business Goal:\n${message}`);
-      window.location.href = `mailto:info@agenorit.com.au?subject=${subject}&body=${body}`;
-      
-      // Close modal after showing success state
-      setTimeout(() => {
-        closeModal();
-      }, 4000);
-    }, 1000);
+    } catch (err: any) {
+      console.error('Submission error:', err);
+      setErrorMessage(err.message || 'Something went wrong. Please try again or email us directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -85,8 +100,16 @@ export function ContactModalProvider({ children }: { children: ReactNode }) {
                 <div className="w-16 h-16 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Send size={32} />
                 </div>
-                <h3 className="text-2xl font-bold mb-2 text-white">Opening Email Client...</h3>
-                <p className="text-gray-400">Your secure request is being transferred to info@agenorit.com.au</p>
+                <h3 className="text-2xl font-bold mb-2 text-white">Consultation Request Received</h3>
+                <p className="text-gray-400 mb-6">
+                  Thank you! Our engineering team has received your project details at <strong>info@agenorit.com.au</strong> and will be in touch within 24 hours.
+                </p>
+                <button
+                  onClick={closeModal}
+                  className="px-6 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors"
+                >
+                  Close
+                </button>
               </div>
             ) : (
               <div className="animate-in fade-in duration-300">
@@ -98,6 +121,12 @@ export function ContactModalProvider({ children }: { children: ReactNode }) {
                   <h2 className="text-3xl font-bold mb-2">Book a Consultation</h2>
                   <p className="text-gray-400">Enter your details below and we'll connect you with our enterprise strategy team.</p>
                 </div>
+
+                {errorMessage && (
+                  <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                    {errorMessage}
+                  </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
