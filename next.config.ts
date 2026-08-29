@@ -19,16 +19,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: '/global-stock-market-countdown',
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/global-stock-market-countdown/:path*',
-        destination: '/',
-        permanent: true,
-      },
-      {
         source: '/linkedin',
         destination: 'https://www.linkedin.com/company/agenor-services/',
         permanent: true,

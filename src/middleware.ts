@@ -21,10 +21,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect('https://www.linkedin.com/company/agenor-services/', 301);
   }
 
-  // Check for legacy global-stock-market-countdown
-  if (pathname.includes('global-stock-market-countdown')) {
-    return NextResponse.redirect(new URL('/', request.url), 301);
-  }
 
   // Check for index.html / index.htm / index.php
   if (pathname === '/index.html' || pathname === '/index.htm' || pathname === '/index.php') {
