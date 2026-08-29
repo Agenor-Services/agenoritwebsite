@@ -117,41 +117,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="footer border-t border-white/10 pt-16">
-        <div className="container">
-          <div className="footer-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="footer-brand lg:col-span-2">
-              <div className="logo relative">
-                <Image src="/logo.png" alt="AgenorIT Logo" width={240} height={70} className="logo-icon object-contain filter drop-shadow-[0_0_10px_rgba(59,130,246,0.5)] transform scale-[2] origin-left translate-x-[2%]" />
-              </div>
-              <p className="footer-desc mt-8 text-gray-400">Intelligent digital foundations. Built for the AI era.</p>
-            </div>
-            
-            <div className="footer-links justify-self-start md:justify-self-end text-sm">
-              <div className="link-group flex flex-col gap-3">
-                <h4 className="text-white font-semibold mb-2">Company</h4>
-                <a href="#about" className="text-gray-400 hover:text-blue-400">About Us</a>
-                <a href="#" className="text-gray-400 hover:text-blue-400">Careers</a>
-              </div>
-            </div>
-
-            <div className="footer-links justify-self-start md:justify-self-end text-sm">
-              <div className="link-group flex flex-col gap-3">
-                <h4 className="text-white font-semibold mb-2">Services</h4>
-                <a href="/services/cloud/azure-setup" className="text-gray-400 hover:text-blue-400">Cloud Infrastructure</a>
-                <a href="/services/ai/strategy" className="text-gray-400 hover:text-blue-400">AI Enablement</a>
-                <a href="/services/website/new" className="text-gray-400 hover:text-blue-400">Web Development</a>
-              </div>
-            </div>
-          </div>
-          
-          <div className="footer-bottom pb-8 pt-8 mt-12 border-t border-white/10 text-center text-sm text-gray-400">
-            <p>&copy; 2026 AgenorIT. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </>
   );
 }

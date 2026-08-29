@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { ContactModalProvider } from "@/components/ContactModalProvider";
 import "./globals.css";
 
@@ -33,12 +34,13 @@ export default function RootLayout({
         <div className="glow-orb orb-3"></div>
         <div className="grid-overlay"></div>
 
-        <div className="wrapper relative z-10">
+        <div className="wrapper relative z-10 flex flex-col min-h-screen">
           <ContactModalProvider>
             <Navbar />
-            <main>
+            <main className="flex-grow">
               {children}
             </main>
+            <Footer />
           </ContactModalProvider>
         </div>
       </body>
